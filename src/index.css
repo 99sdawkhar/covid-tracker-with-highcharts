@@ -1,0 +1,21 @@
+/*
+  Fonts
+*/
+
+@font-face {
+  font-family: 'Codec-Pro-Bold';
+  src: url('./assets/fonts/Codec-Pro-Bold.woff2') format('woff2');
+  font-display: swap;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+}
+
+@font-face {
+  font-family: 'Codec-Pro-Regular';
+  src: url('./assets/fonts/Codec-Pro-Regular.woff2') format('woff2');
+  font-display: swap;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+}
