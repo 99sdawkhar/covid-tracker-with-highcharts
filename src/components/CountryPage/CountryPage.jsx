@@ -4,6 +4,8 @@ import GlobalInformation from '../../components/GlobalInformation/GlobalInformat
 import LineGraph from '../../components/LineGraph/LineGraph';
 import SelectContainer from '../../components/SelectContainer/SelectContainer';
 import { formatDate, dateBefore } from '../../utils/formatDate';
+import CountryPageContainer from './country-page.styled';
+import theme from '../../themes';
 
 const daysOption = [{
   label: 'Last 7 Days',
@@ -34,20 +36,45 @@ const CountryPage = () => {
   const [yAxisCoronaCaseArr, setYAxisCoronaCaseArr] = useState([]);
   
   useEffect(() => {
-    const getCoronaReportByDate = (country, from, to) => {
-      axiosInstance.get(`/country/${country}/status/confirmed?from=${from}T00:00:00Z&to=${to}T00:00:00Z`)
-      .then((res) => {
-        const yAxisData = res.data.map((r) => r.Cases);
-        setYAxisCoronaCaseArr(yAxisData);
-        const countrySummary = allCountriesSummary.Countries.find((c) => c.Slug === country)
-        setTotalConfirmed(countrySummary.TotalConfirmed);
-        setTotalRecovered(countrySummary.TotalRecovered);
-        setTotalDeaths(countrySummary.TotalDeaths);
-        console.log(countrySummary);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+    const getCoronaReportByDate = (country = null, from, to) => {
+        // axiosInstance.get(`/country/${country}?from=${from}T00:00:00Z&to=${to}T00:00:00Z`)
+        axiosInstance.get(`${country ? `/country/${country}` : `/world`}?from=${from}T00:00:00Z&to=${to}T00:00:00Z`)
+        .then((res) => {
+          let active= [];
+          let confirmed = [];
+          let deaths = [];
+  
+          if (country === null) {
+            res.data.forEach((r) => {
+              active.push(r.TotalDeaths)
+              confirmed.push(r.TotalConfirmed)
+              deaths.push(r.TotalDeaths)
+            })
+          } else {
+            res.data.forEach((r) => {
+              active.push(r.Active)
+              confirmed.push(r.Confirmed)
+              deaths.push(r.Deaths)
+            })
+          }
+  
+          const yAxisData = {
+            'Active': active,
+            'Confirmed': confirmed,
+            'Deaths': deaths
+          }
+          console.log(yAxisData);
+          setYAxisCoronaCaseArr(yAxisData);
+          if (country) {
+            const countrySummary = allCountriesSummary.Countries.find((c) => c.Slug === country)
+            setTotalConfirmed(countrySummary.TotalConfirmed);
+            setTotalRecovered(countrySummary.TotalRecovered);
+            setTotalDeaths(countrySummary.TotalDeaths);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     }
 
     const d = new Date();
@@ -56,8 +83,11 @@ const CountryPage = () => {
 
     if (selectedCountry) {
       getCoronaReportByDate(selectedCountry.value, historicDate, currentDate);
+    } else {
+      getCoronaReportByDate(null, historicDate, currentDate);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   } , [selectedCountry, selectedDate])
 
   useEffect(() => {
@@ -78,39 +108,63 @@ const CountryPage = () => {
     })
   }, [])
   
-  return <div>
-    {loading ? 
-    <p>Fetching data. Pleae wait...</p>
+  return <CountryPageContainer>
+    {loading ? (
+      <>
+      <div className="wrapper">
+        <p>Fetching data. Pleae wait...</p>
+      </div>
+      </>
+    )
     : (
       <>
+      <div className="wrapper">
         <GlobalInformation 
         totalConfirmed={totalConfirmed}
         totalRecovered={totalRecovered}
         totalDeaths={totalDeaths}
         country={selectedCountry?.value}
         />
-        <SelectContainer 
-          name="country-select"
-          parentClass="select-container"
-          options={allCountriesSummary?.Countries}
-          optionLabel={'Country'}
-          optionValue={'Slug'}
-          placeholder={'Select Country'}
-          getSelectedValue={(val) => setSelectedCountry(val)}
-        />
-        <SelectContainer 
-          name="days-select"
-          parentClass="select-container"
-          options={daysOption}
-          placeholder={'Select Days'}
-          getSelectedValue={(val) => setSelectedDate(val)}
-        />
-        <LineGraph 
-          yAxisData={yAxisCoronaCaseArr}
-        />
+        <div className="select-container">
+          <SelectContainer 
+            name="country-select"
+            options={allCountriesSummary?.Countries}
+            optionLabel={'Country'}
+            optionValue={'Slug'}
+            placeholder={'Select Country'}
+            getSelectedValue={(val) => setSelectedCountry(val)}
+            />
+          <SelectContainer 
+            name="days-select"
+            options={daysOption}
+            placeholder={'Select Days'}
+            getSelectedValue={(val) => setSelectedDate(val)}
+            />
+        </div>
+        <div className="line-graph-container">
+          <LineGraph
+            yAxisData={yAxisCoronaCaseArr['Confirmed']}
+            title='Confirmed'
+            bg={`${theme.colors.CONFIRMED_BG}`}
+            axisColor={`${theme.colors.CONFIRMED_AXIS}`}
+          />  
+          <LineGraph
+            yAxisData={yAxisCoronaCaseArr['Active']}
+            title='Active'
+            bg={`${theme.colors.ACTIVE_BG}`}
+            axisColor={`${theme.colors.ACTIVE_AXIS}`}
+          />
+          <LineGraph
+            title='Deaths'
+            yAxisData={yAxisCoronaCaseArr['Deaths']}
+            bg={`${theme.colors.DEATH_BG}`}
+            axisColor={`${theme.colors.DEATH_AXIS}`}
+          />
+        </div>
+      </div>
       </>
     )}
-  </div>;
+  </CountryPageContainer>;
 };
 
 export default CountryPage;

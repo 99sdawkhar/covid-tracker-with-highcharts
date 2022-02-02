@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 import theme from "./themes/index";
 import Homepage from "./pages/Homepage";
+import CountryPage from "./components/CountryPage/CountryPage";
 
 function App() {
 
@@ -10,7 +11,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route exact path="/" element={<Homepage />} />
+          <Route exact path="/country-page" element={<CountryPage />} />
           <Route
             path="*"
             element={<Navigate replace to="/"/>}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
+import SelectStyle from './select.styled';
 
-const SelectContainer = ({ parentClass, options, optionLabel, optionValue, placeholder, isMulti, classNamePrefix, className, getSelectedValue}) => {
+const SelectContainer = ({ options, optionLabel, optionValue, placeholder, isMulti, classNamePrefix, className, getSelectedValue}) => {
 
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -20,18 +20,16 @@ const SelectContainer = ({ parentClass, options, optionLabel, optionValue, place
   }
 
   return (
-    <div className={parentClass}>
-      <Select
-        options={optionValue ? formatOptions(options, optionLabel, optionValue) : options}
-        defaultValue={selectedOption}
-        value={selectedOption}
-        onChange={handleChange}
-        placeholder={placeholder}
-        isMulti={isMulti}
-        className={className}
-        classNamePrefix={classNamePrefix}
-      />
-    </div>
+    <SelectStyle
+      options={optionValue ? formatOptions(options, optionLabel, optionValue) : options}
+      defaultValue={selectedOption}
+      value={selectedOption}
+      onChange={handleChange}
+      placeholder={placeholder}
+      isMulti={isMulti}
+      className={className}
+      classNamePrefix='react-select'
+    />
   );
 };
 

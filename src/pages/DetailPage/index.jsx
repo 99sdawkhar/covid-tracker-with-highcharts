@@ -1,9 +1,10 @@
 import React from 'react';
-import WorldMap from '../../components/WorldMap/WorldMap';
+
+import CountryPage from '../../components/CountryPage/CountryPage';
 
 const index = () => {
   return <div>
-    <WorldMap />
+    <CountryPage/>
   </div>;
 };
 

@@ -81,6 +81,16 @@ const GlobalStyle = createGlobalStyle`
 			color: inherit; 
 		}
 	}
+
+  #root {
+    background: #100f16;
+  }
+
+  .wrapper {
+    width: 90%;
+    max-width: 1360px;
+    margin: 0 auto;
+  }
 `;
 
 export default GlobalStyle;
