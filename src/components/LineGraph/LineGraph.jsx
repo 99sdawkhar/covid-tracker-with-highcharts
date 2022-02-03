@@ -1,64 +1,72 @@
-import React from "react";
-import Highcharts from "highcharts";
+import React, { useLayoutEffect, useRef } from "react";
+import Highcharts, { reduce } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import theme from "../../themes";
 
-const LineGraph = ({ yAxisData, title, bg, axisColor }) => {
+import useWindowDimensions from "../../hooks/useWindowDimensions";
+
+import theme from "../../themes";
+import NumberFormat from "react-number-format";
+
+const LineGraph = ({
+  graphType,
+  xAxisData,
+  yAxisData,
+  title,
+  bg,
+  axisColor,
+}) => {
+  const { width } = useWindowDimensions();
+
+  const chartComponent = useRef(null);
+
+  useLayoutEffect(() => {
+    if (width < 768 && chartComponent.current) {
+      chartComponent.current.chart.setSize(400, 300);
+    }
+    if (width < 400 && chartComponent.current) {
+      chartComponent.current.chart.setSize(300, 200);
+    }
+  }, [width]);
+
   const options = {
     chart: {
-      type: "area",
+      type: graphType,
       backgroundColor: bg,
-      borderRadius: "10px",
+      borderRadius: 10,
+      marginRight: 70,
+      marginBottom: 100,
+      marginLeft: 65,
     },
     title: {
       text: title,
       style: {
         fontFamily: `${theme.fonts.CODEC_PRO_REGULAR}, sans-serif`,
-        fontSize: "17px",
-        fontWeight: "600",
+        fontSize: "18px",
         color: axisColor,
-      },
-    },
-    tooltip: {
-      backgroundColor: {
-        linearGradient: [0, 0, 0, 60],
-        stops: [
-          [0, "#fff"],
-          [1, "#E0E0E0"],
-        ],
-      },
-      borderWidth: 1,
-      borderColor: "#AAA",
-      borderColor: theme.colors.PRIMARY_COLOR,
-      borderWidth: 2,
-      padding: 18,
-      style: {
-        fontSize: "20px",
       },
     },
     legend: {
       enabled: false,
     },
     xAxis: {
+      categories: xAxisData,
       lineWidth: 2,
-      lineColor: axisColor,
+      lineColor: "#100F16",
       labels: {
         enabled: true,
+        rotation: -45,
         style: {
           fontFamily: `${theme.fonts.CODEC_PRO_REGULAR}, sans-serif`,
           fontSize: "16px",
           color: axisColor,
         },
       },
-      title: {
-        text: null,
-      },
     },
     yAxis: {
       lineWidth: 2,
-      lineColor: axisColor,
+      lineColor: "#100F16",
       opposite: true,
-      gridLineColor: 'transparent',
+      gridLineColor: "transparent",
       labels: {
         enabled: true,
         style: {
@@ -73,24 +81,71 @@ const LineGraph = ({ yAxisData, title, bg, axisColor }) => {
     },
     plotOptions: {
       series: {
-        label: {
-          connectorAllowed: false,
-        },
-        pointStart: 1,
-      },
-      series: {
         color: axisColor,
+        borderWidth: 0,
+        stickyTracking: true,
+        whiskerWidth: 5,
       },
     },
-    series: [{ data: yAxisData }],
+    tooltip: {
+      backgroundColor: '#100F16',
+      borderColor: theme.colors.BLACK,
+      borderWidth: 0,
+      style: {
+        fontFamily: `${theme.fonts.CODEC_PRO_REGULAR}, sans-serif`,
+        fontSize: "12px",
+        color: '#dff',
+        textAlign: 'center',
+      },
+      headerFormat: '<b>{series.name} Cases on <br>{point.x}<br>',
+      pointFormat: "<span><i>{point.y}</i></span>",
+    },
+    series: [
+      {
+        data: yAxisData,
+        name: title,
+      },
+    ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            chart: {
+              borderRadius: 10,
+              marginRight: 35,
+              marginBottom: 60,
+              marginLeft: 35,
+            },
+            xAxis: {
+              labels: {
+                style: {
+                  fontSize: "8px",
+                },
+              }
+            },
+            yAxis: {
+              labels: {
+                style: {
+                  fontSize: "8px",
+                },
+              }
+            }
+          }
+        },
+      ],
+    },
   };
 
   return (
-    <div style={{ "padding": "20px"}}>
+    <div style={{ padding: "20px 0" }}>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
         allowChartUpdate={true}
+        ref={chartComponent}
       />
     </div>
   );

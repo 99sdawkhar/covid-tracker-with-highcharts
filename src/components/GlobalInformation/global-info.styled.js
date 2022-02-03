@@ -38,8 +38,30 @@ const GlobalInfo = styled.div`
     margin: 0 auto 25px;
     
     @media screen and (min-width: 540px) {
-      justify-content: space-around;
+      justify-content: center;
       flex-direction: row;
+    }
+
+    .confirmed {
+      color: ${(props) => props.theme.colors.CONFIRMED_AXIS};
+      &:hover {
+        background-color: ${(props) => props.theme.colors.CONFIRMED_BG};
+      }
+    }
+    .recovered {
+      color: ${(props) => props.theme.colors.RECOVERY};
+      &:hover {
+        background-color: ${(props) => props.theme.colors.RECOVERY_BG};
+      }
+    }
+    .deaths {
+      color: ${(props) => props.theme.colors.DEATH_AXIS};
+      &:hover {
+        background-color: ${(props) => props.theme.colors.DEATH_BG};
+      }
+    }
+    h4 span {
+      font-family: ${(props) => props.theme.fonts.CODEC_PRO_BOLD};
     }
   }
 `

@@ -5,9 +5,11 @@ const CardStyling = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 10px 20px;
-  background: #EB9C07;
+  margin: 10px 20px;
+  cursor: pointer;
+  background:${(props) => props.theme.colors.DARK_BLUE}; 
   box-shadow: 2px 2px 2px 1px rgba(255, 255, 255, 0.2);
-  border: 1px solid;
+  border-radius: 5px;
   margin-bottom: 10px;
   &:last-child {
     margin-bottom: 0;

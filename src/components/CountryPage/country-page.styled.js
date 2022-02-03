@@ -6,7 +6,7 @@ const CountryPageContainer = styled.div`
     align-items: center;
     flex-direction: column;
     @media screen and (min-width: 540px) {
-    flex-direction: row;
+      flex-direction: row;
       justify-content: center;
     }
   }

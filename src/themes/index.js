@@ -17,7 +17,10 @@ const theme = {
     ACTIVE_AXIS: '#2b58b4',
     DEATH_BG: '#1c1c2b',
     DEATH_AXIS: '#4c515d',
-    
+    YELLOW: '#faab2a',
+    DARK_BLUE: '#161625',
+    RECOVERY: '#2DA94B',
+    RECOVERY_BG: '#172829'
   },
   fonts: {
     BEBASNEUE_BOOK: 'BebasNeue-Book',

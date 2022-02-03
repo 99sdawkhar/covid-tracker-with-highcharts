@@ -20,12 +20,12 @@ const SelectStyle = styled(Select)`
   }
 
   .react-select__menu {
-    background-color: ${(props) => props.theme.colors.SEARCH_BG};
+    background-color: ${(props) => props.theme.colors.GRAY};
     border: 1px solid ${(props) => props.theme.colors.MENU_BG};
   }
 
   .react-select__option {
-    background-color: ${(props) => props.theme.colors.SEARCH_BG};
+    background-color: ${(props) => props.theme.colors.GRAY};
 
     &:hover {
         background-color: ${(props) => props.theme.colors.MENU_BG};
