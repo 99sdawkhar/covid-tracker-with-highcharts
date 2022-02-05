@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
 import SelectStyle from './select.styled';
 
 const SelectContainer = ({ options, optionLabel, optionValue, placeholder, isMulti, classNamePrefix, className, getSelectedValue, value}) => {

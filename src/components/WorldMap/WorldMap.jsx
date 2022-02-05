@@ -10,15 +10,14 @@ import theme from '../../themes';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 import { MapSection } from './Map.styled';
-import  { doubleClicker, formatData, redirectToDetailPage, resetDoubleClick } from './MapLogic';
-import GlobalInformation from '../GlobalInformation/GlobalInformation';
+import  { doubleClicker, formatData, resetDoubleClick } from './MapLogic';
 
 // setting projection co-ordinates system
 if (typeof window !== 'undefined') {
   window.proj4 = window.proj4 || proj4;
 }
 
-const WorldMap = ({ mapOptions, allCountriesDetails, globalData }) => {
+const WorldMap = ({ mapOptions, allCountriesDetails }) => {
   const navigate = useNavigate();
 
   const [worldMapData, setWorldMapData] = useState([]);
@@ -72,9 +71,7 @@ const WorldMap = ({ mapOptions, allCountriesDetails, globalData }) => {
                 doubleClicker.clickedOnce = true;
                 doubleClicker.timer = setTimeout(() => {
                   resetDoubleClick();
-                  // redirectToDetailPage(e, navigate);
                   navigate(`/country/${e.point.name.toLowerCase().replace(/\s+/g, '-')}`);
-
                 }, doubleClicker.timeBetweenClicks);
               }
             },
@@ -91,11 +88,6 @@ const WorldMap = ({ mapOptions, allCountriesDetails, globalData }) => {
   return (
     <MapSection className="map-section">
       <div className="wrapper">
-        <GlobalInformation 
-          confirmed={globalData}
-          recovered={globalData}
-          deaths={globalData}
-        />
         <HighchartsReact
           allowChartUpdate={allowChartUpdate}
           constructorType="mapChart"
