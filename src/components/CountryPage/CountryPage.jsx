@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import axiosInstance from "../../api/axiosInstance";
 
@@ -12,6 +12,7 @@ import { formatDate, dateBefore, formatDateArr } from "../../utils/formatDate";
 
 import theme from "../../themes";
 import CountryPageContainer from "./country-page.styled";
+import Loader from "../Loader";
 
 const daysOption = [
   {
@@ -30,7 +31,9 @@ const daysOption = [
 
 const CountryPage = ({ allCountriesSummary }) => {
   const { countryId } = useParams();
+  const navigate = useNavigate();
 
+  
   const [loading, setLoading] = useState(false);
 
   const [confirmed, setConfirmed] = useState(null);
@@ -152,17 +155,22 @@ const CountryPage = ({ allCountriesSummary }) => {
     }
   }, [allCountriesSummary]);
 
+  const goToHomepage = () => {
+    navigate('/');
+  }
+
   return (
     <CountryPageContainer>
       {loading ? (
-        <>
-          <div className="wrapper">
-            <p>Fetching data. Pleae wait...</p>
-          </div>
-        </>
+        <Loader />
       ) : (
         <>
           <div className="wrapper">
+            <button 
+              className="home-button" 
+              type="button"
+              onClick={goToHomepage}  
+            >Go to Homepage</button>
             <GlobalInformation
               confirmed={confirmed}
               recovered={recovered}

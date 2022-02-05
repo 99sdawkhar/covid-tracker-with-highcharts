@@ -4,6 +4,7 @@ import GlobalInformation from "../GlobalInformation/GlobalInformation";
 import WorldMap from '../WorldMap/WorldMap'
 
 import options from "../../data/worldmap/options";
+import Loader from "../Loader";
 
 const Homepage = ({
   globalData,
@@ -14,9 +15,7 @@ const Homepage = ({
   return (
     <div>
       {loadingMap ? (
-        <div className="wrapper">
-          <p>Fetching data. Pleae wait...</p>
-        </div>
+        <Loader />
       ) : (
         <>
           <GlobalInformation
