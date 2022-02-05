@@ -3,15 +3,11 @@ import styled from 'styled-components';
 export const MapSection = styled.div`
   .wrapper { width: 100% !important; }
 
-  /* background-color: ${(props) => props.theme.colors.BACKGROUND_COLOR}; */
   .highcharts-reset-zoom ~ .highcharts-reset-zoom {
     display: none;
   }
   .highcharts-label.highcharts-legend-title text {
     font-size: 20px;
-  }
-  .highcharts-background {
-    /* fill: ${(props) => props.theme.colors.BACKGROUND_COLOR}; */
   }
 
   .map-hovered-tooltip {

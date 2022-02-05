@@ -135,7 +135,7 @@ const mapOptions = {
     itemMarginTop: 5,
     itemMarginBottom: 5,
     itemStyle: {
-      fontSize: 12,
+      fontSize: 14,
       fontFamily: `${theme.fonts.CODEC_PRO_REGULAR}, sans-serif`,
     },
     symbolPadding: 10,

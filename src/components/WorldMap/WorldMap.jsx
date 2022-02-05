@@ -40,7 +40,6 @@ const WorldMap = ({ mapOptions, allCountriesDetails }) => {
   // setting chart Height from resize events
   function setSizeAndView() {
     if (width < 768 && chartComponent.current) {
-      console.log(chartComponent.current.chart);
       chartComponent?.current?.chart.setSize(width, height - 50);
       chartComponent?.current?.chart?.mapView.setView(
         [4800, 8200], // lat-long to zoom on
