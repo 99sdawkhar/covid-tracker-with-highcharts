@@ -1,30 +1,73 @@
 import React from 'react';
+import NumberFormat from 'react-number-format';
 import Card from '../Card/Card';
-import LineGraph from '../LineGraph/LineGraph';
+
+import GlobalInfo from './global-info.styled';
 
 const GlobalInformation = ({
-  totalConfirmed,
-  totalRecovered,
-  totalDeaths,
+  confirmed,
+  recovered,
+  deaths,
   country,
 }) => {
-  return <div>
-    <h2>{country === undefined ? 'World Wide' : country} - Corona Report</h2>
-    <ul>
-      <Card>
-        <h3>Total Confirmed</h3>
-        <span>{totalConfirmed}</span>
-      </Card>
-      <Card>
-        <h3>Total Recovered</h3>
-        <span>{totalRecovered}</span>
-      </Card>
-      <Card>
-        <h3>Total Deaths</h3>
-        <span>{totalDeaths}</span>
-      </Card>
-    </ul>
-  </div>
+  return (
+    <GlobalInfo>
+      <h2>{country === undefined ? 'World Wide' : country} - Corona Report</h2>
+      <div className="card-collection">
+        <Card className="confirmed">
+          <h3>Total Confirmed</h3>
+          <NumberFormat
+            value={confirmed?.['NewConfirmed']}
+            prefix={'+'}
+            displayType={'text'}
+            thousandSeparator={true}
+            className="confirmed"
+          />
+          <h4>
+            <NumberFormat
+              value={confirmed?.['TotalConfirmed']}
+              displayType={'text'}
+              thousandSeparator={true}
+            />
+          </h4>
+        </Card>
+        <Card className="recovered">
+          <h3>Total Recovered</h3>
+          <NumberFormat
+            value={recovered?.['NewRecovered']}
+            displayType={'text'}
+            prefix={'+'}
+            thousandSeparator={true}
+            className="recovered"
+          />
+          <h4>
+            <NumberFormat
+              value={recovered?.['TotalRecovered']}
+              displayType={'text'}
+              thousandSeparator={true}
+            />
+          </h4>
+        </Card>
+        <Card className="deaths">
+          <h3>Total Deceased</h3>
+          <NumberFormat
+            value={deaths?.['NewDeaths']}
+            displayType={'text'}
+            prefix={'+'}
+            thousandSeparator={true}
+            className="deaths"
+          />
+          <h4>
+            <NumberFormat
+              value={deaths?.['TotalDeaths']}
+              displayType={'text'}
+              thousandSeparator={true}
+            />
+          </h4>
+        </Card>
+      </div>
+    </GlobalInfo>
+  )
 };
 
 export default GlobalInformation;

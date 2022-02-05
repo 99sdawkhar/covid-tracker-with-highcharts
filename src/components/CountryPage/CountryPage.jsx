@@ -1,54 +1,116 @@
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../api/axiosInstance';
-import GlobalInformation from '../../components/GlobalInformation/GlobalInformation';
-import LineGraph from '../../components/LineGraph/LineGraph';
-import SelectContainer from '../../components/SelectContainer/SelectContainer';
-import { formatDate, dateBefore } from '../../utils/formatDate';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const daysOption = [{
-  label: 'Last 7 Days',
-  value: '7'
+import axiosInstance from "../../api/axiosInstance";
+
+import GlobalInformation from "../../components/GlobalInformation/GlobalInformation";
+import LineGraph from "../../components/LineGraph/LineGraph";
+import SelectContainer from "../../components/SelectContainer/SelectContainer";
+import Toggle from "../Toggle/Toggle";
+
+import { formatDate, dateBefore, formatDateArr } from "../../utils/formatDate";
+
+import theme from "../../themes";
+import CountryPageContainer from "./country-page.styled";
+
+const daysOption = [
+  {
+    label: "Last 7 Days",
+    value: "7",
   },
   {
-    label: 'Last 30 Days',
-    value: '30'
+    label: "Last 30 Days",
+    value: "30",
   },
   {
-    label: 'Last 90 Days',
-    value: '90'
-  }
+    label: "Last 90 Days",
+    value: "90",
+  },
 ];
 
-const CountryPage = () => {
+const CountryPage = ({ allCountriesSummary }) => {
+  const { countryId } = useParams();
 
   const [loading, setLoading] = useState(false);
 
-  const [totalConfirmed, setTotalConfirmed] = useState(null);
-  const [totalRecovered, setTotalRecovered] = useState(null);
-  const [totalDeaths, setTotalDeaths] = useState(null);
-  const [allCountriesSummary, setAllCountriesSummary] = useState(null);
+  const [confirmed, setConfirmed] = useState(null);
+  const [recovered, setRecovered] = useState(null);
+  const [deaths, setDeaths] = useState(null);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
 
   const [yAxisCoronaCaseArr, setYAxisCoronaCaseArr] = useState([]);
-  
+  const [xAxisDateArr, setXAxisDateArr] = useState([]);
+  const [checked, setChecked] = useState(false);
+  const [graphType, setGraphType] = useState("column");
+
   useEffect(() => {
-    const getCoronaReportByDate = (country, from, to) => {
-      axiosInstance.get(`/country/${country}/status/confirmed?from=${from}T00:00:00Z&to=${to}T00:00:00Z`)
-      .then((res) => {
-        const yAxisData = res.data.map((r) => r.Cases);
-        setYAxisCoronaCaseArr(yAxisData);
-        const countrySummary = allCountriesSummary.Countries.find((c) => c.Slug === country)
-        setTotalConfirmed(countrySummary.TotalConfirmed);
-        setTotalRecovered(countrySummary.TotalRecovered);
-        setTotalDeaths(countrySummary.TotalDeaths);
-        console.log(countrySummary);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    }
+    setLoading(true);
+    const getCoronaReportByDate = (country = null, from, to) => {
+      axiosInstance
+        .get(
+          `${
+            country ? `/country/${country}` : `/world`
+          }?from=${from}T00:00:00Z&to=${to}T00:00:00Z`
+        )
+        .then((res) => {
+          let active = [];
+          let confirmed = [];
+          let deaths = [];
+          let dates = [];
+
+          const sortedData = res.data.sort((a, b) =>
+            a["Date"].localeCompare(b["Date"])
+          );
+
+          if (country === null) {
+            sortedData.forEach((r) => {
+              confirmed.push(r.NewConfirmed);
+              deaths.push(r.NewDeaths);
+              dates.push(r.Date);
+            });
+          } else {
+            sortedData.forEach((r) => {
+              active.push(r.Active);
+              confirmed.push(r.Confirmed);
+              deaths.push(r.Deaths);
+              dates.push(r.Date);
+            });
+          }
+
+          const yAxisData = {
+            active: active,
+            confirmed: confirmed,
+            deaths: deaths,
+          };
+
+          setYAxisCoronaCaseArr(yAxisData);
+          setXAxisDateArr(formatDateArr(dates));
+
+          if (country) {
+            const countrySummary = allCountriesSummary?.find(
+              (c) => c.Slug === country
+            );
+            setConfirmed({
+              TotalConfirmed: countrySummary.TotalConfirmed,
+              NewConfirmed: countrySummary.NewConfirmed,
+            });
+            setRecovered({
+              TotalRecovered: countrySummary.TotalRecovered,
+              NewRecovered: countrySummary.NewRecovered,
+            });
+            setDeaths({
+              TotalDeaths: countrySummary.TotalDeaths,
+              NewDeaths: countrySummary.NewDeaths,
+            });
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     const d = new Date();
     const currentDate = formatDate(d);
@@ -56,61 +118,119 @@ const CountryPage = () => {
 
     if (selectedCountry) {
       getCoronaReportByDate(selectedCountry.value, historicDate, currentDate);
+    } else {
+      getCoronaReportByDate(null, historicDate, currentDate);
     }
 
-  } , [selectedCountry, selectedDate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCountry, selectedDate]);
+
+  const handleGraphToggle = () => {
+    if (checked) {
+      setGraphType("column");
+      setChecked(false);
+    } else {
+      setGraphType("area");
+      setChecked(true);
+    }
+  };
 
   useEffect(() => {
-    setLoading(true);
-    axiosInstance.get('/summary')
-    .then((res) => {
-      if (res.status === 200) {
-        const data = res.data;
-        setTotalConfirmed(data.Global.TotalConfirmed);
-        setTotalRecovered(data.Global.TotalRecovered);
-        setTotalDeaths(data.Global.TotalDeaths);
-        setAllCountriesSummary(data);
-        setLoading(false);
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }, [])
-  
-  return <div>
-    {loading ? 
-    <p>Fetching data. Pleae wait...</p>
-    : (
-      <>
-        <GlobalInformation 
-        totalConfirmed={totalConfirmed}
-        totalRecovered={totalRecovered}
-        totalDeaths={totalDeaths}
-        country={selectedCountry?.value}
-        />
-        <SelectContainer 
-          name="country-select"
-          parentClass="select-container"
-          options={allCountriesSummary?.Countries}
-          optionLabel={'Country'}
-          optionValue={'Slug'}
-          placeholder={'Select Country'}
-          getSelectedValue={(val) => setSelectedCountry(val)}
-        />
-        <SelectContainer 
-          name="days-select"
-          parentClass="select-container"
-          options={daysOption}
-          placeholder={'Select Days'}
-          getSelectedValue={(val) => setSelectedDate(val)}
-        />
-        <LineGraph 
-          yAxisData={yAxisCoronaCaseArr}
-        />
-      </>
-    )}
-  </div>;
+    if (countryId) {
+      const getSelectedFromUrl = (country) => {
+        if (allCountriesSummary) {
+          const s = allCountriesSummary?.find(
+            (c) => c.Slug === country
+          );
+          setSelectedCountry({
+            label: s.Country,
+            value: s.Slug,
+          });
+        }
+      };
+      getSelectedFromUrl(countryId);
+    }
+  }, [allCountriesSummary]);
+
+  return (
+    <CountryPageContainer>
+      {loading ? (
+        <>
+          <div className="wrapper">
+            <p>Fetching data. Pleae wait...</p>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="wrapper">
+            <GlobalInformation
+              confirmed={confirmed}
+              recovered={recovered}
+              deaths={deaths}
+              country={selectedCountry?.value}
+            />
+            <div className="select-container">
+              <SelectContainer
+                name="country-select"
+                options={allCountriesSummary}
+                optionLabel={"Country"}
+                optionValue={"Slug"}
+                placeholder={"Select Country"}
+                getSelectedValue={(val) => setSelectedCountry(val)}
+                value={selectedCountry}
+              />
+              <SelectContainer
+                name="days-select"
+                options={daysOption}
+                placeholder={"Select Days"}
+                getSelectedValue={(val) => setSelectedDate(val)}
+              />
+            </div>
+            <Toggle
+              labelOne="column chart"
+              labelTwo="area chart"
+              name="toggle-chart"
+              id="toggle-chart"
+              onChange={handleGraphToggle}
+              checked={checked}
+            />
+            <div className="line-graph-container">
+              {yAxisCoronaCaseArr["confirmed"]?.length > 0 && (
+                <LineGraph
+                  graphType={graphType}
+                  yAxisData={yAxisCoronaCaseArr["confirmed"]}
+                  xAxisData={xAxisDateArr}
+                  title="Confirmed"
+                  bg={`${theme.colors.CONFIRMED_BG}`}
+                  axisColor={`${theme.colors.CONFIRMED_AXIS}`}
+                />
+              )}
+              {yAxisCoronaCaseArr["active"]?.length > 0 && (
+                <LineGraph
+                  graphType={graphType}
+                  yAxisData={yAxisCoronaCaseArr["active"]}
+                  xAxisData={xAxisDateArr}
+                  title="Active"
+                  bg={`${theme.colors.ACTIVE_BG}`}
+                  axisColor={`${theme.colors.ACTIVE_AXIS}`}
+                />
+              )}
+              {yAxisCoronaCaseArr["deaths"]?.length > 0 && (
+                <LineGraph
+                  graphType={graphType}
+                  yAxisData={yAxisCoronaCaseArr["deaths"]}
+                  xAxisData={xAxisDateArr}
+                  title="Deceased"
+                  bg={`${theme.colors.DEATH_BG}`}
+                  axisColor={`${theme.colors.DEATH_AXIS}`}
+                />
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </CountryPageContainer>
+  );
 };
 
 export default CountryPage;
