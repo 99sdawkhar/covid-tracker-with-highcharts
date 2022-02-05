@@ -35,7 +35,7 @@ const WorldMap = ({ mapOptions, allCountriesDetails }) => {
     if (scoreData) {
       setWorldMapData(scoreData);
     }
-  }, []);
+  }, [allCountriesDetails]);
   
   // setting chart Height from resize events
   function setSizeAndView() {
@@ -49,10 +49,10 @@ const WorldMap = ({ mapOptions, allCountriesDetails }) => {
   }
   
   const debouncedSetView = useRef(debounce(() => setSizeAndView(), 300)).current;
-
   // setting chart Height from resize events
   useLayoutEffect(() => {
     debouncedSetView();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
  
   // passing formatted data to the highcharts library through options object

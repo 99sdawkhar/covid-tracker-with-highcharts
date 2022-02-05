@@ -22,7 +22,7 @@ const SelectContainer = ({ options, optionLabel, optionValue, placeholder, isMul
   return (
     <SelectStyle
       options={optionValue ? formatOptions(options, optionLabel, optionValue) : options}
-      defaultValue={value}
+      defaultValue={selectedOption}
       value={value}
       onChange={handleChange}
       placeholder={placeholder}

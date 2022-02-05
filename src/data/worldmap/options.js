@@ -113,7 +113,7 @@ const mapOptions = {
       },
     },
     labelFormatter() {
-      switch(this.from) {
+      switch (this.from) {
         case 0:
           return `0 - 500k`;
         case 500000:
@@ -124,6 +124,8 @@ const mapOptions = {
           return `5M - 10M`;
         case 10000000:
           return `10M - MOST CASES`;
+        default:
+          return false;
       }
     },
     align: 'left',
