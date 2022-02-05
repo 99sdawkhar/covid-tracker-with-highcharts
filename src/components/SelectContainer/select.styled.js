@@ -4,32 +4,30 @@ import Select from 'react-select';
 const SelectStyle = styled(Select)`
     width: 100%;
     padding: 5px;
+    font-family: ${(props) => props.theme.fonts.CODEC_PRO_REGULAR};
 
     @media screen and (min-width: 540px) {
-        width: 30%;
+      width: 30%;
     }
     
   .react-select__control {
-    background-color: ${(props) => props.theme.colors.SELECT_BG};
-    border-color: ${(props) => props.theme.colors.GRAY};
+    background-color: ${(props) => props.theme.colors.OFFWHITE};
+    border-color: none;
     transition: none;
-
-    &:hover {
-      border-color: #000;
-    }
   }
 
   .react-select__menu {
-    background-color: ${(props) => props.theme.colors.GRAY};
-    border: 1px solid ${(props) => props.theme.colors.MENU_BG};
+    background-color: ${(props) => props.theme.colors.OFFWHITE};
+    border: none
   }
 
   .react-select__option {
-    background-color: ${(props) => props.theme.colors.GRAY};
+    background-color: ${(props) => props.theme.colors.OFFWHITE};
+    color: ${(props) => props.theme.colors.BLUE};
 
     &:hover {
-        background-color: ${(props) => props.theme.colors.MENU_BG};
-        color: ${(props) => props.theme.colors.WHITE};
+      background-color: ${(props) => props.theme.colors.BLUE};
+      color: ${(props) => props.theme.colors.WHITE};
     }
   }
 
@@ -39,7 +37,9 @@ const SelectStyle = styled(Select)`
 
   .react-select__placeholder,
   .react-select__single-value {
-    color: ${(props) => props.theme.colors.GRAY};
+    color: ${(props) => props.theme.colors.BLACK_BG};
+    font-size: 18px;
+    font-family: ${(props) => props.theme.fonts.CODEC_PRO_BOLD};
   }
 `
 export default SelectStyle;

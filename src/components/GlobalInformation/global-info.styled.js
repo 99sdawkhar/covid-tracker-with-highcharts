@@ -6,9 +6,6 @@ const GlobalInfo = styled.div`
   flex-direction: column;
   color: ${(props) => props.theme.colors.WHITE};
   padding: 50px 0px 0px;
-  // background: #EB9C07;
-  // background: ${(props) => props.theme.colors.BLACK_BG};
-  // background: linear-gradient(10deg, red, orange, yellow, green, blue, indigo, violet, red);
   
   h2 {
     display: inline-block;
@@ -17,7 +14,7 @@ const GlobalInfo = styled.div`
     user-select: none;
     font-size: 34px;
     font-family: ${(props) => props.theme.fonts.BEBASNEUE_BOLD};
-    background: -webkit-linear-gradient(bottom, #f5b350, rgb(255, 255, 255));
+    background: -webkit-linear-gradient(bottom, #555, #000);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 

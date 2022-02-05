@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const CountryPageContainer = styled.div`
+  padding-bottom: 20px;
   .select-container {
     display: flex;
     align-items: center;

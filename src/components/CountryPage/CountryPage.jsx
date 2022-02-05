@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import axiosInstance from '../../api/axiosInstance';
 import GlobalInformation from '../../components/GlobalInformation/GlobalInformation';
 import LineGraph from '../../components/LineGraph/LineGraph';
@@ -23,6 +25,8 @@ const daysOption = [{
 ];
 
 const CountryPage = () => {
+  const { countryId } = useParams();
+
   const [loading, setLoading] = useState(false);
 
   const [confirmed, setConfirmed] = useState(null);
@@ -37,6 +41,11 @@ const CountryPage = () => {
   const [xAxisDateArr, setXAxisDateArr] = useState([]);
   const [checked, setChecked] = useState(false);
   const [graphType, setGraphType] = useState('column');
+  // console.log({selectedCountry});
+  // console.log({country});
+  // const countrySummary = allCountriesSummary.Countries.find((c) => c.Slug === country)
+
+
   
   useEffect(() => {
     const getCoronaReportByDate = (country = null, from, to) => {
@@ -113,7 +122,6 @@ const CountryPage = () => {
     .then((res) => {
       if (res.status === 200) {
         const data = res.data;
-        console.log(data);
         setConfirmed({
           'TotalConfirmed' : data.Global.TotalConfirmed,
           'NewConfirmed' : data.Global.NewConfirmed,
@@ -145,6 +153,21 @@ const CountryPage = () => {
     }
   }
   
+  useEffect(() => {
+    if (countryId) {
+      const getSelectedFromUrl = (country) => {
+        if (allCountriesSummary) {
+          const s = allCountriesSummary?.Countries.find(c => c.Slug === country)
+          setSelectedCountry({
+            "label": s.Country,
+            "value": s.Slug,
+          })
+        }
+      }
+      getSelectedFromUrl(countryId);
+    }
+  } , [allCountriesSummary])
+  
   return <CountryPageContainer>
     {loading ? (
       <>
@@ -157,10 +180,10 @@ const CountryPage = () => {
       <>
       <div className="wrapper">
         <GlobalInformation 
-        confirmed={confirmed}
-        recovered={recovered}
-        deaths={deaths}
-        country={selectedCountry?.value}
+          confirmed={confirmed}
+          recovered={recovered}
+          deaths={deaths}
+          country={selectedCountry?.value}
         />
         <div className="select-container">
           <SelectContainer 
@@ -170,6 +193,7 @@ const CountryPage = () => {
             optionValue={'Slug'}
             placeholder={'Select Country'}
             getSelectedValue={(val) => setSelectedCountry(val)}
+            value={selectedCountry}
             />
           <SelectContainer 
             name="days-select"

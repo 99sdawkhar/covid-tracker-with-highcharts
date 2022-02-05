@@ -1,7 +1,7 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const StyledToggle = styled.div`
-    margin: 20px auto 0;
+  margin: 20px auto 0;
 `;
 
 export const Input = styled.input`
@@ -62,7 +62,7 @@ export const Label = styled.div`
   }
 
   span {
-    color: ${(props) => props.theme.colors.WHITE};
+    color: ${(props) => props.theme.colors.BLACK_BG};
     font-size: 18px;
     font-family: ${(props) => props.theme.fonts.CODEC_PRO_REGULAR};
     line-height: 1.5;

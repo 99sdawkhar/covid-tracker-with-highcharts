@@ -1,11 +1,10 @@
 import React, { useLayoutEffect, useRef } from "react";
-import Highcharts, { reduce } from "highcharts";
+import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 import theme from "../../themes";
-import NumberFormat from "react-number-format";
 
 const LineGraph = ({
   graphType,

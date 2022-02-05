@@ -7,7 +7,7 @@ const CardStyling = styled.div`
   padding: 10px 20px;
   margin: 10px 20px;
   cursor: pointer;
-  background:${(props) => props.theme.colors.DARK_BLUE}; 
+  background:${(props) => props.theme.colors.LIGHT_BLUE_CARD}; 
   box-shadow: 2px 2px 2px 1px rgba(255, 255, 255, 0.2);
   border-radius: 5px;
   margin-bottom: 10px;

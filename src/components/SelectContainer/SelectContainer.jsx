@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import SelectStyle from './select.styled';
 
-const SelectContainer = ({ options, optionLabel, optionValue, placeholder, isMulti, classNamePrefix, className, getSelectedValue}) => {
+const SelectContainer = ({ options, optionLabel, optionValue, placeholder, isMulti, classNamePrefix, className, getSelectedValue, value}) => {
 
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -18,12 +19,12 @@ const SelectContainer = ({ options, optionLabel, optionValue, placeholder, isMul
     setSelectedOption(val);
     getSelectedValue && getSelectedValue(val);
   }
-
+  
   return (
     <SelectStyle
       options={optionValue ? formatOptions(options, optionLabel, optionValue) : options}
-      defaultValue={selectedOption}
-      value={selectedOption}
+      defaultValue={value}
+      value={value}
       onChange={handleChange}
       placeholder={placeholder}
       isMulti={isMulti}

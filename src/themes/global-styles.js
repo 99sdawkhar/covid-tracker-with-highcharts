@@ -82,9 +82,7 @@ const GlobalStyle = createGlobalStyle`
 		}
 	}
 
-  #root {
-    background: #100f16;
-  }
+  #root { background: rgba(159,172,185,0.8); }
 
   .wrapper {
     width: 90%;

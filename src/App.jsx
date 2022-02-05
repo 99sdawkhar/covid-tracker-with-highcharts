@@ -2,7 +2,7 @@ import { ThemeProvider } from "styled-components";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import theme from "./themes/index";
-import Homepage from "./pages/Homepage";
+import Homepage from "./pages/Homepage/index";
 import CountryPage from "./components/CountryPage/CountryPage";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Homepage />} />
-          <Route exact path="/country-page" element={<CountryPage />} />
+          <Route path="/country/:countryId" element={<CountryPage />} />
           <Route
             path="*"
             element={<Navigate replace to="/"/>}
