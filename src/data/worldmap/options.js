@@ -100,7 +100,7 @@ const mapOptions = {
   legend: {
     enabled: true,
     title: {
-      text: 'Index Rank',
+      text: 'Covid Index',
       style: {
         color:
           Highcharts?.defaultOptions?.legend?.title?.style?.color ||
@@ -113,11 +113,20 @@ const mapOptions = {
       },
     },
     labelFormatter() {
-      if (this.from === 0) {
-        return `${this.from || '0'} - ${'500000'}`;
+      switch (this.from) {
+        case 0:
+          return `0 - 500k`;
+        case 500000:
+          return `500k - 1M`;
+        case 1000000:
+          return `1M - 5M`;
+        case 5000000:
+          return `5M - 10M`;
+        case 10000000:
+          return `10M - MOST CASES`;
+        default:
+          return false;
       }
-
-      return `${this.from || '0'} - ${this.to || 'MOST CASES'}`;
     },
     align: 'left',
     verticalAlign: 'bottom',
@@ -130,7 +139,6 @@ const mapOptions = {
     itemStyle: {
       fontSize: 14,
       fontFamily: `${theme.fonts.CODEC_PRO_REGULAR}, sans-serif`,
-      letterSpacing: 1,
     },
     symbolPadding: 10,
     symbolHeight: 20,
@@ -184,7 +192,7 @@ const mapOptions = {
             padding: 10,
             symbolHeight: 15,
             symbolWidth: 10,
-          },
+          }
         },
       },
       {
@@ -225,9 +233,9 @@ const mapOptions = {
                 fontSize: 18,
               },
             },
-            // backgroundColor:
-            //   Highcharts?.defaultOptions?.legend?.backgroundColor ||
-            //   'rgba(255, 255, 255, 0.65)',
+            backgroundColor:
+              Highcharts?.defaultOptions?.legend?.backgroundColor ||
+              'rgba(255, 255, 255, 0.65)',
             y: 14,
             x: 0,
             padding: 20,

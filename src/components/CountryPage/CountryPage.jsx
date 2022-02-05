@@ -153,6 +153,7 @@ const CountryPage = ({ allCountriesSummary }) => {
       };
       getSelectedFromUrl(countryId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCountriesSummary]);
 
   const goToHomepage = () => {

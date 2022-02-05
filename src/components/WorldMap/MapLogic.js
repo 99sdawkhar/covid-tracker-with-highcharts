@@ -12,8 +12,6 @@ export const formatData = (allCountriesDetails, type = 'TotalConfirmed') => {
       rankingCountries.push({
         country: country.Country,
         score: country[type],
-        // deaths: country.TotalDeaths,
-        // score: country.TotalConfirmed,
       });
     });
   }

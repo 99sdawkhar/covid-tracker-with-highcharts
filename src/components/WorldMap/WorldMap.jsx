@@ -11,6 +11,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 import { MapSection } from './Map.styled';
 import  { doubleClicker, formatData, resetDoubleClick } from './MapLogic';
+import { debounce } from '../../utils/helperFunction';
 
 // setting projection co-ordinates system
 if (typeof window !== 'undefined') {
@@ -26,6 +27,7 @@ const WorldMap = ({ mapOptions, allCountriesDetails }) => {
   // zoom map on mobile devices
   const chartComponent = useRef(null);
   const { width, height } = useWindowDimensions();
+  
   useEffect(() => {
     setAllowChartUpdate(true);
 
@@ -33,18 +35,25 @@ const WorldMap = ({ mapOptions, allCountriesDetails }) => {
     if (scoreData) {
       setWorldMapData(scoreData);
     }
-  }, []);
+  }, [allCountriesDetails]);
   
   // setting chart Height from resize events
-  useLayoutEffect(() => {
+  function setSizeAndView() {
     if (width < 768 && chartComponent.current) {
-      chartComponent?.current?.chart?.setSize(width, height - 50);
-      chartComponent?.current?.chart?.mapView?.setView(
+      chartComponent?.current?.chart.setSize(width, height - 50);
+      chartComponent?.current?.chart?.mapView.setView(
         [4800, 8200], // lat-long to zoom on
         -2 // zoom size
       );
     }
-  }, [width]);
+  }
+  
+  const debouncedSetView = useRef(debounce(() => setSizeAndView(), 300)).current;
+  // setting chart Height from resize events
+  useLayoutEffect(() => {
+    debouncedSetView();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
  
   // passing formatted data to the highcharts library through options object
   if (worldMapData.length > 0) {
@@ -80,7 +89,7 @@ const WorldMap = ({ mapOptions, allCountriesDetails }) => {
       ],
       tooltip: {
         headerFormat: `<span>Confirmed Cases</span><br/>`,
-        pointFormat: "<span><i>{point.name}: <b>{point.value}<b></i></span>",
+        pointFormat: "<span><i><b>{point.name}<b>: <b>{point.value}<b></i></span>",
       },
     };
   }
