@@ -9,10 +9,12 @@ import SelectContainer from "../../components/SelectContainer/SelectContainer";
 import Toggle from "../Toggle/Toggle";
 
 import { formatDate, dateBefore, formatDateArr } from "../../utils/formatDate";
+import useTitle from "../../hooks/useTitle";
 
 import theme from "../../themes";
 import CountryPageContainer from "./country-page.styled";
 import Loader from "../Loader";
+
 
 const daysOption = [
   {
@@ -32,7 +34,6 @@ const daysOption = [
 const CountryPage = ({ allCountriesSummary }) => {
   const { countryId } = useParams();
   const navigate = useNavigate();
-
   
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +48,8 @@ const CountryPage = ({ allCountriesSummary }) => {
   const [xAxisDateArr, setXAxisDateArr] = useState([]);
   const [checked, setChecked] = useState(false);
   const [graphType, setGraphType] = useState("column");
+
+  useTitle(countryId);
 
   useEffect(() => {
     setLoading(true);
